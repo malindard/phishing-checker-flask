@@ -1,0 +1,18 @@
+# Virtual environment
+myenv/
+venv/
+.env
+*.env
+
+# Credential & key
+*.pem
+*.ppk
+*.key
+*.crt
+
+# Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
