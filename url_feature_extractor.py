@@ -487,8 +487,12 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
     
     # get content text
     Text = soup.get_text()
+
+    # extract body text from <p> tags, limited to 1500 characters
+    paragraphs = [p.get_text(separator=' ', strip=True) for p in soup.find_all('p')]
+    Body = ' '.join(paragraphs)[:1500]
     
-    return Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text
+    return Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text, Body
 
 
 # url = 'https://supports1.umpikuja.com/'

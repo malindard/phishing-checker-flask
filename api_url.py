@@ -157,7 +157,7 @@ def extract_features_from_url(url):
             if not content or len(content) == 0:
                 logger.warning(f"Empty content received for URL: {url}")
                 extracted_content = {
-                    'forms': [],
+                    'body': [],
                     'heads': [],
                     'titles': [],
                     'scripts': [],
@@ -184,10 +184,10 @@ def extract_features_from_url(url):
                 if soup:
                     # Extract content with error handling
                     try:
-                        extracted_content['forms'] = [str(form) for form in soup.find_all('form')]
+                        extracted_content['body'] = [str(body) for body in soup.find_all('p')]
                     except Exception as e:
-                        logger.warning(f"Error extracting forms from {url}: {e}")
-                        extracted_content['forms'] = []
+                        logger.warning(f"Error extracting body from {url}: {e}")
+                        extracted_content['body'] = []
                     
                     try:
                         extracted_content['heads'] = [str(head) for head in soup.find_all('head')]
@@ -208,7 +208,7 @@ def extract_features_from_url(url):
                         extracted_content['scripts'] = []
                 else:
                     extracted_content = {
-                        'forms': [],
+                        'body': [],
                         'heads': [],
                         'titles': [],
                         'scripts': [],
@@ -226,11 +226,12 @@ def extract_features_from_url(url):
                 IFrame = {'visible': [], 'invisible': [], 'null': []}
                 Title = ''
                 Text = ''
+                Body = ''
                 
                 # Extract data using feature_extractor function
                 try:
-                    Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text = fe_extract_data_from_URL(
-                        hostname, content, domain_name, Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text
+                    Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text, Body = fe_extract_data_from_URL(
+                        hostname, content, domain_name, Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text, Body
                     )
                 except Exception as e:
                     logger.warning(f"Error in extract_data_from_URL for {url}: {e}")
@@ -244,7 +245,7 @@ def extract_features_from_url(url):
         except Exception as e:
             logger.error(f"Error processing content for {url}: {e}")
             extracted_content = {
-                'forms': [],
+                'body': [],
                 'heads': [],
                 'titles': [],
                 'scripts': [],
@@ -573,7 +574,7 @@ def url_debug_url():
                     
                     # Count elements
                     debug_info['extracted_elements'] = {
-                        'forms': len(soup.find_all('form')),
+                        'body': len(soup.find_all('p')),
                         'heads': len(soup.find_all('head')),
                         'titles': len(soup.find_all('title')),
                         'scripts': len(soup.find_all('script')),
@@ -585,8 +586,8 @@ def url_debug_url():
                     if debug_info['extracted_elements']['titles'] == 0:
                         debug_info['errors'].append('No title tags found')
                     
-                    if debug_info['extracted_elements']['forms'] == 0:
-                        debug_info['errors'].append('No form tags found')
+                    if debug_info['extracted_elements']['body'] == 0:
+                        debug_info['errors'].append('No body tags found')
                     
                     if debug_info['content_length'] < 100:
                         debug_info['errors'].append('Content seems too short')
